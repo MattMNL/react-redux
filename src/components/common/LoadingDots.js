@@ -11,6 +11,7 @@ class LoadingDots extends React.Component {
 
   componentDidMount() {
     this.interval = setInterval(() => {
+      /* eslint-disable */
       this.setState({
         frame: this.state.frame + 1
       });

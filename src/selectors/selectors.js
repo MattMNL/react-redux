@@ -6,3 +6,6 @@ export function authorsFormattedForDropdown(authors) {
     };
   });
 }
+export function getCoursesByAuthor(courses, author) {
+  return courses.filter(course => course.authorId === author.id);
+}

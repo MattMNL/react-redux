@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
+import toastr from 'toastr';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseList from './CourseList';
@@ -9,10 +10,24 @@ class CoursesPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
+    this.deleteCourse = this.deleteCourse.bind(this);
   }
 
   redirectToAddCoursePage() {
-    browserHistory.push('/course');
+    if (this.props.authors.length !== 0) {
+      browserHistory.push('/course');
+    } else {
+      if (confirm('There are no registered authors. Would you like to create one now?')) {
+        browserHistory.push('/authors');
+      }
+    }
+  }
+
+  deleteCourse(course) {
+    this.props.actions.deleteCourse(course)
+      .then(() => {
+        toastr.success('Course successfully deleted');
+      });
   }
 
   render() {
@@ -28,7 +43,7 @@ class CoursesPage extends React.Component {
             className="btn btn-primary"
             onClick={this.redirectToAddCoursePage} />
         </p>
-        <CourseList courses={courses} />
+        <CourseList courses={courses} onDelete={this.deleteCourse} />
       </div>
     );
   }
@@ -36,12 +51,14 @@ class CoursesPage extends React.Component {
 
 CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
+  authors: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    courses: state.courses
+    courses: state.courses,
+    authors: state.authors
   };
 }
 

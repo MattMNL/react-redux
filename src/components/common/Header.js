@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import { Link, IndexLink } from 'react-router';
 import LoadingDots from './LoadingDots';
+import {connect} from 'react-redux';
 
-const Header = ({loading}) => {
+const Header = ({loading, courses, authors}) => {
   return (
     <nav className="navbar navbar-toggleable-md navbar-light bg-faded mb-4">
       <h1 className="navbar-brand" href="#">Pluralsight Administration</h1>
@@ -10,13 +11,24 @@ const Header = ({loading}) => {
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item active">
-            <IndexLink to="/" className="nav-link" activeClassName="active">Home</IndexLink>
+            <IndexLink to="/" className="nav-link" activeClassName="active">
+              Home
+            </IndexLink>
           </li>
           <li className="nav-item">
-            <IndexLink to="/courses" className="nav-link" activeClassName="active">Courses</IndexLink>
+            <IndexLink to="/courses" className="nav-link" activeClassName="active">
+              Courses ({courses.length})
+            </IndexLink>
           </li>
           <li className="nav-item">
-            <IndexLink to="/about" className="nav-link" activeClassName="active">About</IndexLink>
+            <IndexLink to="/authors" className="nav-link" activeClassName="active">
+              Authors ({authors.length})
+            </IndexLink>
+          </li>
+          <li className="nav-item">
+            <IndexLink to="/about" className="nav-link" activeClassName="active">
+              About
+            </IndexLink>
           </li>
         </ul>
         {loading &&
@@ -33,4 +45,11 @@ Header.propTypes = {
   loading: PropTypes.bool.isRequired
 };
 
-export default Header;
+function mapStateToProps(state, ownProps) {
+  return {
+    courses: state.courses,
+    authors: state.authors
+  };
+}
+
+export default connect(mapStateToProps)(Header);
