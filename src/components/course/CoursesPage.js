@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import toastr from 'toastr';
+import _ from 'underscore';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseList from './CourseList';
@@ -9,8 +10,10 @@ import {browserHistory} from 'react-router';
 class CoursesPage extends React.Component {
   constructor(props, context) {
     super(props, context);
+
     this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
     this.deleteCourse = this.deleteCourse.bind(this);
+    this.setSortKey = this.setSortKey.bind(this);
   }
 
   redirectToAddCoursePage() {
@@ -30,6 +33,11 @@ class CoursesPage extends React.Component {
       });
   }
 
+  setSortKey(key) {
+    let sortedCourses = _.sortBy(this.props.courses, key);
+    this.setState({courses: sortedCourses});
+  }
+
   render() {
     const {courses} = this.props;
 
@@ -43,7 +51,7 @@ class CoursesPage extends React.Component {
             className="btn btn-primary"
             onClick={this.redirectToAddCoursePage} />
         </p>
-        <CourseList courses={courses} onDelete={this.deleteCourse} />
+        <CourseList courses={courses} onDelete={this.deleteCourse} onSort={this.setSortKey} />
       </div>
     );
   }
